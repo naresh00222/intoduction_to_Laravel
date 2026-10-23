@@ -1,0 +1,37 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VARIANT: 8.3-bookworm
+    volumes:
+      # Mounts the parent of the repo folder, as the Dev Containers PHP templates do
+      - ../..:/workspaces:cached
+    # Keep the container running so VS Code / Codespaces can attach to it
+    command: sleep infinity
+    # Share the db container's network so the app reaches MariaDB on 127.0.0.1:3306
+    network_mode: service:db
+
+  db:
+    image: mariadb:11.4
+    restart: unless-stopped
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    environment:
+      MARIADB_ROOT_PASSWORD: secret
+      MARIADB_DATABASE: webdev
+      MARIADB_USER: student
+      MARIADB_PASSWORD: secret
+
+  adminer:
+    image: adminer:latest
+    restart: unless-stopped
+    # Same trick as the app container: share db's network so MariaDB is
+    # at 127.0.0.1:3306 and Adminer's port 8080 is forwarded with the rest
+    network_mode: service:db
+    environment:
+      ADMINER_DEFAULT_SERVER: 127.0.0.1
+
+volumes:
+  mariadb-data:

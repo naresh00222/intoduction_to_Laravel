@@ -1,0 +1,51 @@
+{
+  "name": "PHP, MariaDB and Node",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts"
+    }
+  },
+  "forwardPorts": [8000, 8080, 5173, 3306],
+  "portsAttributes": {
+    "8000": { "label": "Laravel / PHP server", "visibility": "public","onAutoForward": "openBrowser" },
+    "8080": { "label": "Adminer", "visibility": "public","onAutoForward": "notify" },
+    "5173": { "label": "Vite dev server","visibility": "public" },
+    "3306": { "label": "MariaDB", "onAutoForward": "silent" }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bmewburn.vscode-intelephense-client",
+        "xdebug.php-debug",
+        "onecentlin.laravel-blade",
+        "ryannaddy.laravel-artisan",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-azuretools.vscode-docker",
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-mysql"
+      ],
+      "settings": {
+      "editor.formatOnSave": true,
+      "workbench.editorAssociations": {
+        "*.md": "vscode.markdown.preview.editor"
+      },
+      "sqltools.connections": [
+          {
+            "name": "MariaDB",
+            "driver": "MySQL",
+            "server": "db",
+            "port": 3306,
+            "database": "webdev",
+            "username": "student",
+            "password": "secret"
+          }
+        ]
+      }
+    }
+  }
+}
